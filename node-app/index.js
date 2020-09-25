@@ -74,7 +74,7 @@ console.log(result);
         return a + b}
     };
     - you can't publish over another version
-    - in package.json we can manually update version //#endregion
+    - in package.json we can manually update version
     - we can also run npm version major, minor or patch
     - Ex: nopm version minor
     - npm publish

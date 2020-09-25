@@ -1,7 +1,8 @@
 # node-app
-## Built a RESTful service with Node, Express and MongoDB, from setup to production for Udemy course. I wanted to really understand Node on a deeper level and improve my understanding of the back end. 
+## Built a RESTful service with Node, Express and MongoDB, from setup to production with guidance from a Udemy course. My main goals for this app were to go further into the inner workings of Node and really solidify what I learned about back-end functionality and RESTful API's.
 
-**Structure:**
+**Udemy Course: Node.js: The Complete Guide to Build Restful API's**
+**Structure:** 
 - Refresher on Node.js and architecture
 - The Node module system
 - NPM
