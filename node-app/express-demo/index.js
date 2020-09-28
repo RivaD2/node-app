@@ -1,4 +1,5 @@
 //REQUIRE CALLS //DEPENDENCIES
+const config = require('config');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -67,6 +68,42 @@ app.use(middleware);
     - our static content is always at root of the site*/
 app.use(express.static('public'));
 app.use(helmet());
+
+/*************************************************************** */
+
+/*CONFIGURATION:
+    - Environments and storing config settings go hand-in-han and
+        overriding these settings in each environment
+    - In development environemnt I am going to use a different
+    database or mail server
+    - so I learned how to use config settings and how to override them
+    - I used npm config for this
+    - I created three different files(environment files) in config folder
+        1) one file was for default config settings
+        2) the second file was used to define settings specific
+            for development environment. I can override settings defined
+            in default.json and add additional settings
+        3) the third file is production.json
+    - I then loaded the config module at the top of file storing it in const
+    */
+// congig object has get() and arg to specify name of config property
+console.log('Application Name:' + config.get('name'));
+//I want mail server, I need to access 'host' in 'mail'. Used dot notation.
+console.log('Mail Server:' + config.get('mail.host'));
+/*never store passwords in configs file
+    -store passwords in environment variables
+    - For this exercise, I defined env password for mail server in terminal by entering:
+            export app_password=1234
+            then I ran nodemon index.js
+    - in development env I manually set env variable
+    - I store passwords in env var and then read them using config module
+    - in config folder, I added folder customer-environment-variables.json
+    - IN this file, I define the mapping of config settings to env vars
+    - Below I displayed password of mail server by using dot notation
+    - this config object looks at various sources to find value for config
+    - the password is read from env variable*/
+
+console.log('Mail Password:' + config.get('mail.password'));
 
 
 /*I can specify formats within the function for morgan
