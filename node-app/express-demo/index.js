@@ -1,19 +1,28 @@
 //this represents our app
 const express = require('express');
 const app = express();
+
+/*adding a piece of middleware
+    -when I call express.json() this method returns middleware
+    - then I call app.use to use middleware in request processing pipeline
+    */
+app.use(express.json());
 // we have app.get, app.post, app.put, app.delete (methods)
 
 
+/****************************************************** */
 /*
-- method(when building route) takes two args
-- first is the path or url
+//GET REQUESTS:
+
+- Method(when building route) takes two args
+- First is the path or url
 - The second arg, is a callback function
--this function will be called when we have
+- This function will be called when we have
     http get request to this endpoint
 - This callback has two args, req, and res
-- this is how we define a route:
-    - specify path or url and callback function (aka route handler)
-    - then we need to listen on a given port
+- This is how we define a route:
+     1)specify path or url and callback function (aka route handler)
+     2)then we need to listen on a given port
 */
 
 app.get('/', (req, res) => {
@@ -69,7 +78,34 @@ app.get('/api/courses/:id', (req, res) => {
     res.send(course);
 });
 
+/********************************************************** */
 
+//HOW TO RESPOND TO HTTP POST REQUESTS:
+
+//we are going to post to collection of courses
+app.post('/api/courses', (req, res) => {
+    /* in route handler we need to read course obj that is in body of request
+        - use properties to create new course obj
+        - add new course object to courses array*/
+    const course = {
+        //not working with database so I manually assign id
+        //get number of courses in courses array and add one to it
+        id: courses.length + 1,
+        /*need to read this from body of request
+            -here I assume that req body has a name property
+            -in order for this line to work, I need to enable parsing of JSON objects
+             in body of request because by default it is not enabled in express
+             - so at the top, I specify app.use(express.json());*/
+        name: req.body.name
+    };
+    //push course obj into course array
+     courses.push(course);
+     /* when we post object to server, when server creates new resource,
+     we should return that object in the body of the response
+     - this is because we assign id on server, we need to return course obj
+     to client because the client needs to know id of new resource*/
+    res.send(course);
+})
 
 
 /*PORT
