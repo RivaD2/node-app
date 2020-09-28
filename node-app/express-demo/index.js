@@ -7,6 +7,30 @@ const Joi = require('joi');
 const middleware = require('./middleware');
 const helmet = require('helmet');
 const morgan = require('morgan');
+
+/*process is a global obj in node that gives us access to current process
+    - this process obj has a prop called env which gives us environment vars
+    - there is a standard env var called ENV
+    - if it is not set, it will return undefined
+    - we can set this to staging, testing or production*/
+//Ex 1: console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+/*another way to get current environment is the app object:
+    -this method uses env var to detect the current environment
+    -if env var is not set, it will return DEVELOPMENT by default
+    -app.get('env')
+    -Ex 2: console.log(`app:${app.get('env')}`);
+    - we want to enable logging of http requests only on
+    development machine so, I need to say when to turn it on:*/
+if(app.get('env') === 'development') {
+    app.use(morgan('tiny'));
+    console.log('Morgan enabled');
+}
+/* SO now if I set my environment var in terminal to production, and
+run app again, morgan will not be enabled. To set env var in terminal:
+    1) export NODE_ENV=production
+    2) nodemon (then name of file to run)/*
+
+
 /*MIDDLEWARE:
     -when I call express.json() this method returns middleware
     - then I call app.use to use middleware in request processing pipeline
@@ -43,11 +67,15 @@ app.use(middleware);
     - our static content is always at root of the site*/
 app.use(express.static('public'));
 app.use(helmet());
-//I can specify formats within the function for morgan
-//everytime request is sent to server, it will be logged
-//morgan logs request to terminal but I can configure it to write it to log file
-//this will impact request processing pipeline, so maybe it is not best in production
-//it may only be best to use for short periods of time and then turn it off
+
+
+/*I can specify formats within the function for morgan
+    -everytime request is sent to server, it will be logged
+    -morgan logs request to terminal but I can configure it to write it to log file
+    -this will impact request processing pipeline, so maybe it is not best in production
+    -it may only be best to use for short periods of time and then turn it off
+ -by setting different environment variables and writing code to say
+   when to turn it on based off current environment*/
 app.use(morgan('tiny'));
 /****************************************************** */
 /*
