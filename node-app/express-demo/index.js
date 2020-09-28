@@ -1,6 +1,7 @@
 //this represents our app
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 /*adding a piece of middleware
     -when I call express.json() this method returns middleware
@@ -106,6 +107,14 @@ app.post('/api/courses', (req, res) => {
      to client because the client needs to know id of new resource*/
     res.send(course);
 })
+//to call http services, we use chrome extension called POSTMAN
+
+
+
+
+
+
+
 
 
 /*PORT
