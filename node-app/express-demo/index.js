@@ -33,17 +33,40 @@ app.get('api/courses', (req, res) => {
 - query string params are for anything that is optional as well
 - route params are used for essential or required values*/
 
-app.get('/api/courses/:id', (req, res) => {
-    //in order to read param use:
+//defining array of courses and the array has 3 course objects
+const courses = [
+    {id: 1, name: 'course1'},
+    {id: 2, name: 'course2'},
+    {id: 3, name: 'course3'}
+]
+
+//this endpoint gets all courses
+app.get('/api/courses', (req, res) => {
+    //in order to read param use :
     //for now we will send this to the client
-    res.send(req.params.id);
+    res.send(courses);
 });
 
-//example of using query params
-app.get('/api/posts/:year/:month', (req, res) => {
+//getting single course from server
+app.get('/api/courses/:id', (req, res) => {
+    //example of using query params
    //we use req.query to read params
    //these params are stored in obj with key value pairs
-    res.send(req.query);
+    // res.send(req.query);
+
+    /*
+    -find() method requires us to pass a function
+    -this function will find a match to given criteria
+    --if this course doesn't have a value, or if we don't find a course
+    with an id, we should return response with HTTP status of 404 (obj not found)
+    - added in logic that will return boolean value
+    -req.params.id will return a string and we need an integer
+    -Used parseInto to turn string into integer
+    */
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+    if(!course) res.status(404).send('The course was not found');
+    // if we do have a course with id, return it to client
+    res.send(course);
 });
 
 
