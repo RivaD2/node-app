@@ -1,7 +1,9 @@
-//this represents our app
+//REQUIRE CALLS //DEPENDENCIES
 const express = require('express');
 const app = express();
 const cors = require('cors');
+//Joi is a class returned from the node module
+const Joi = require('joi');
 
 /*adding a piece of middleware
     -when I call express.json() this method returns middleware
@@ -88,6 +90,17 @@ app.post('/api/courses', (req, res) => {
     /* in route handler we need to read course obj that is in body of request
         - use properties to create new course obj
         - add new course object to courses array*/
+
+    /*this new way of validating course goes in the route handler above
+    - moved all validate course logic to validateCourse()
+    -so here, I call validateCourse, using object destructuring
+    - if error, return 400 response to client*/
+    const { error } = validateCourse(req.body); //equals result.error
+     if(error) {
+         res.status(400).send(error.details[0].message);
+     return;
+ }
+
     const course = {
         //not working with database so I manually assign id
         //get number of courses in courses array and add one to it
@@ -107,9 +120,73 @@ app.post('/api/courses', (req, res) => {
      to client because the client needs to know id of new resource*/
     res.send(course);
 })
+/*********************************************** */
+//USING POSTMAN:
 //to call http services, we use chrome extension called POSTMAN
+    // I went to postman and added in post route with url of http://localhose:5000/api/courses
+    // I clicked on 'body' tab and selected 'raw' and then 'JSON' to put JSON in body of request
+    /* I put JSON object in body and added name prop in object
+    {
+        "name": "new course"
+    }
+       - after clicking send, the body of response was this:
+        {    //now we have four courses in our array
+            "id": 4,
+            "name": "new course"
+        }
+        - in this implementation I assumed that there is an obj with name prop in
+        body of request
+        -what if client forgets to send prop or sends invalid name?
+        - that is where input validation comes in*/
+/************************************************ */
+/*INPUT VALIDATION:
+ - as a best practice, never trust what client sends you
+ - I should always validate input
+ - in this example, because I am dealing with a simple obj with one prop of name,
+        I can write some validation logic in the post route.
+- in the real world, objects will be more complext
+- we don't want validation logic to be too complex at beginning of route handler
+- node has a package that makes validation easy
+- so i ran npm i joi
+- I loaded the module at the top of the page and stored it in const Joi */
 
+/************************************** */
+//HOW TO UPDATE  A COURSE
 
+//need to add route param : since I am dealing with specific course
+app.put('/api/courses/:id', (req, res) => {
+    //first look up course with given id
+     //if course doesn't exist return 404(resource not found)
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+    if(!course) res.status(404).send('The course was not found');
+    //otherwise, validate, if invalid, return 400 bad request
+
+    //new way of validating a course
+    //this is object destructuring
+     const { error } = validateCourse(req.body); //equals result.error
+     if(error) {
+          /*to simplify object sent to client, I can go to details array
+         and get first element and access message property*/
+         res.status(400).send(error.details[0].message);
+     return;
+ }
+ //update course and return updated course
+ course.name = req.body.name;
+ res.send(course);
+});
+
+function validateCourse(course) {
+    /*with Joi, i first have to define schema to define shape of object
+     -first define the schema*/
+    const schema =  {
+    /*schema is set to course obj
+        -telling Joi that the string should have min of three characters
+         and that it is required*/
+        name: Joi.string().min(3).required()
+    };
+    //this  method returns an obj so we store it in const
+     return  Joi.validate(course, schema);
+}
 
 
 
