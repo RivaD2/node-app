@@ -4,15 +4,51 @@ const app = express();
 const cors = require('cors');
 //Joi is a class returned from the node module
 const Joi = require('joi');
-
-/*adding a piece of middleware
+const middleware = require('./middleware');
+const helmet = require('helmet');
+const morgan = require('morgan');
+/*MIDDLEWARE:
     -when I call express.json() this method returns middleware
     - then I call app.use to use middleware in request processing pipeline
+    - middleware function takes a request obj and either returns response to client
+    or passes control to another middleware function
+    - In express, every route handler function we have (app.get()) is technically a middleware function
+    - it terminates the request/response cycle
+    - app.use(expres.json()) reads request when it is called
+    - the job of this middleware function is to read request and if json obj is in body of request,
+        it will parse the body of the req into json obj, and set request.body property
+    - We can create custom middleware functions so that every request we get on server
+    will go through the middleware function
+    - middleware functions are called in sequence!
+    -if middleware function does not pass control to another middlware
+    function to end req/response cycle, our request will end up hanging...
+    - Each middleware function should be in separate module
     */
+
 app.use(express.json());
-// we have app.get, app.post, app.put, app.delete (methods)
+/*this is another built-in middleware function
+    - this parses incoming requests with url encoded payloads
+    - that is a request with a body like this:
+                key=value&key=value
+    - this is a traditional approach
+    - if I have a html form with an input fields, and post form to server,
+    the body of the request would look like the above.*/
 
-
+app.use(express.urlencoded({extended : true}));
+//passed middleware function
+app.use(middleware);
+/*static is another built in middleware function
+    -static serves all static files like css,images etc.
+    - I will put all static assets inside public folder
+    - our static content is always at root of the site*/
+app.use(express.static('public'));
+app.use(helmet());
+//I can specify formats within the function for morgan
+//everytime request is sent to server, it will be logged
+//morgan logs request to terminal but I can configure it to write it to log file
+//this will impact request processing pipeline, so maybe it is not best in production
+//it may only be best to use for short periods of time and then turn it off
+app.use(morgan('tiny'));
 /****************************************************** */
 /*
 //GET REQUESTS:
@@ -76,7 +112,7 @@ app.get('/api/courses/:id', (req, res) => {
     -Used parseInto to turn string into integer
     */
     const course = courses.find(c => c.id === parseInt(req.params.id));
-    if(!course) res.status(404).send('The course was not found');
+    if(!course) return res.status(404).send('The course was not found');
     // if we do have a course with id, return it to client
     res.send(course);
 });
@@ -96,10 +132,7 @@ app.post('/api/courses', (req, res) => {
     -so here, I call validateCourse, using object destructuring
     - if error, return 400 response to client*/
     const { error } = validateCourse(req.body); //equals result.error
-     if(error) {
-         res.status(400).send(error.details[0].message);
-     return;
- }
+     if(error)  return res.status(400).send(error.details[0].message);
 
     const course = {
         //not working with database so I manually assign id
@@ -158,18 +191,18 @@ app.put('/api/courses/:id', (req, res) => {
     //first look up course with given id
      //if course doesn't exist return 404(resource not found)
     const course = courses.find(c => c.id === parseInt(req.params.id));
-    if(!course) res.status(404).send('The course was not found');
+    if(!course)  return res.status(404).send('The course was not found');
     //otherwise, validate, if invalid, return 400 bad request
 
     //new way of validating a course
     //this is object destructuring
-     const { error } = validateCourse(req.body); //equals result.error
-     if(error) {
-          /*to simplify object sent to client, I can go to details array
+     /*to simplify object sent to client, I can go to details array
          and get first element and access message property*/
-         res.status(400).send(error.details[0].message);
-     return;
- }
+     const { error } = validateCourse(req.body); //equals result.error
+     if(error) return res.status(400).send(error.details[0].message);
+
+
+
  //update course and return updated course
  course.name = req.body.name;
  res.send(course);
@@ -188,7 +221,21 @@ function validateCourse(course) {
      return  Joi.validate(course, schema);
 }
 
+/**************************************** */
+//HOW TO DELETE A COURSE
+//specifying param since I am deleting ine course
+app.delete('/api/courses/:id', (req, res) => {
+//Look up course with id and if not found, return 404 error
+const course = courses.find(c => c.id === parseInt(req.params.id));
+    if(!course) return res.status(404).send('The course with given ID was not found');
 
+    //to delete one course, need to find index of course in courses array
+    //get index and store in const, use splice to remove obj from courses array
+    const index = courses.indexOf(course);
+    courses.splice(index, 1);
+    //return response to client
+    res.send(course);
+});
 
 
 
