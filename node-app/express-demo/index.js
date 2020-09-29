@@ -6,8 +6,11 @@ const cors = require('cors');
 //Joi is a class returned from the node module
 const Joi = require('joi');
 const middleware = require('./middleware');
+const debug = require('debug')('app:startup');
 const helmet = require('helmet');
 const morgan = require('morgan');
+
+
 
 /*process is a global obj in node that gives us access to current process
     - this process obj has a prop called env which gives us environment vars
@@ -24,8 +27,9 @@ const morgan = require('morgan');
     development machine so, I need to say when to turn it on:*/
 if(app.get('env') === 'development') {
     app.use(morgan('tiny'));
-    console.log('Morgan enabled');
+    debug('Morgan enabled');
 }
+
 /* SO now if I set my environment var in terminal to production, and
 run app again, morgan will not be enabled. To set env var in terminal:
     1) export NODE_ENV=production
@@ -51,6 +55,7 @@ run app again, morgan will not be enabled. To set env var in terminal:
     */
 
 app.use(express.json());
+
 /*this is another built-in middleware function
     - this parses incoming requests with url encoded payloads
     - that is a request with a body like this:
@@ -60,8 +65,10 @@ app.use(express.json());
     the body of the request would look like the above.*/
 
 app.use(express.urlencoded({extended : true}));
+
 //passed middleware function
 app.use(middleware);
+
 /*static is another built in middleware function
     -static serves all static files like css,images etc.
     - I will put all static assets inside public folder
@@ -86,10 +93,13 @@ app.use(helmet());
         3) the third file is production.json
     - I then loaded the config module at the top of file storing it in const
     */
+
 // congig object has get() and arg to specify name of config property
 console.log('Application Name:' + config.get('name'));
+
 //I want mail server, I need to access 'host' in 'mail'. Used dot notation.
 console.log('Mail Server:' + config.get('mail.host'));
+
 /*never store passwords in configs file
     -store passwords in environment variables
     - For this exercise, I defined env password for mail server in terminal by entering:
@@ -115,8 +125,8 @@ console.log('Mail Password:' + config.get('mail.password'));
    when to turn it on based off current environment*/
 app.use(morgan('tiny'));
 /****************************************************** */
-/*
-//GET REQUESTS:
+
+/*GET REQUESTS:
 
 - Method(when building route) takes two args
 - First is the path or url
@@ -219,6 +229,7 @@ app.post('/api/courses', (req, res) => {
     res.send(course);
 })
 /*********************************************** */
+
 //USING POSTMAN:
 //to call http services, we use chrome extension called POSTMAN
     // I went to postman and added in post route with url of http://localhose:5000/api/courses
@@ -249,10 +260,12 @@ app.post('/api/courses', (req, res) => {
 - I loaded the module at the top of the page and stored it in const Joi */
 
 /************************************** */
+
 //HOW TO UPDATE  A COURSE
 
 //need to add route param : since I am dealing with specific course
 app.put('/api/courses/:id', (req, res) => {
+
     //first look up course with given id
      //if course doesn't exist return 404(resource not found)
     const course = courses.find(c => c.id === parseInt(req.params.id));
@@ -287,6 +300,7 @@ function validateCourse(course) {
 }
 
 /**************************************** */
+
 //HOW TO DELETE A COURSE
 //specifying param since I am deleting ine course
 app.delete('/api/courses/:id', (req, res) => {
@@ -301,8 +315,6 @@ const course = courses.find(c => c.id === parseInt(req.params.id));
     //return response to client
     res.send(course);
 });
-
-
 
 
 
