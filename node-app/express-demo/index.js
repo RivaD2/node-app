@@ -10,60 +10,19 @@ const debug = require('debug')('app:startup');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
-
-
-/*process is a global obj in node that gives us access to current process
-    - this process obj has a prop called env which gives us environment vars
-    - there is a standard env var called ENV
-    - if it is not set, it will return undefined
-    - we can set this to staging, testing or production*/
-//Ex 1: console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-/*another way to get current environment is the app object:
-    -this method uses env var to detect the current environment
-    -if env var is not set, it will return DEVELOPMENT by default
-    -app.get('env')
-    -Ex 2: console.log(`app:${app.get('env')}`);
-    - we want to enable logging of http requests only on
-    development machine so, I need to say when to turn it on:*/
-if(app.get('env') === 'development') {
-    app.use(morgan('tiny'));
-    debug('Morgan enabled');
-}
-
-/* SO now if I set my environment var in terminal to production, and
-run app again, morgan will not be enabled. To set env var in terminal:
-    1) export NODE_ENV=production
-    2) nodemon (then name of file to run)/*
-
-
-/*MIDDLEWARE:
-    -when I call express.json() this method returns middleware
-    - then I call app.use to use middleware in request processing pipeline
-    - middleware function takes a request obj and either returns response to client
-    or passes control to another middleware function
-    - In express, every route handler function we have (app.get()) is technically a middleware function
-    - it terminates the request/response cycle
-    - app.use(expres.json()) reads request when it is called
-    - the job of this middleware function is to read request and if json obj is in body of request,
-        it will parse the body of the req into json obj, and set request.body property
-    - We can create custom middleware functions so that every request we get on server
-    will go through the middleware function
-    - middleware functions are called in sequence!
-    -if middleware function does not pass control to another middlware
-    function to end req/response cycle, our request will end up hanging...
-    - Each middleware function should be in separate module
-    */
-
+/*app.use(expres.json()) reads request when it is called
+- the job of this middleware function is to read request and if json obj
+  is in body of request,it will parse the body of the req into json obj,
+  and set request.body property*/
 app.use(express.json());
 
-/*this is another built-in middleware function
+/*urlencoded is another built-in middleware function
     - this parses incoming requests with url encoded payloads
     - that is a request with a body like this:
                 key=value&key=value
     - this is a traditional approach
     - if I have a html form with an input fields, and post form to server,
     the body of the request would look like the above.*/
-
 app.use(express.urlencoded({extended : true}));
 
 //passed middleware function
@@ -76,7 +35,7 @@ app.use(middleware);
 app.use(express.static('public'));
 app.use(helmet());
 
-/************************ */
+
 /* TEMPLATING ENGINES:
     - sometimes we will want to return html markup to the client
     - Templating engines come into play here
@@ -93,23 +52,8 @@ app.set('views', './views')
 
 
 
-/*************************************************************** */
+//CONFIGURATION:
 
-/*CONFIGURATION:
-    - Environments and storing config settings go hand-in-han and
-        overriding these settings in each environment
-    - In development environemnt I am going to use a different
-    database or mail server
-    - so I learned how to use config settings and how to override them
-    - I used npm config for this
-    - I created three different files(environment files) in config folder
-        1) one file was for default config settings
-        2) the second file was used to define settings specific
-            for development environment. I can override settings defined
-            in default.json and add additional settings
-        3) the third file is production.json
-    - I then loaded the config module at the top of file storing it in const
-    */
 
 // config object has get() and arg to specify name of config property
 console.log('Application Name:' + config.get('name'));
@@ -117,19 +61,10 @@ console.log('Application Name:' + config.get('name'));
 //I want mail server, I need to access 'host' in 'mail'. Used dot notation.
 console.log('Mail Server:' + config.get('mail.host'));
 
-/*never store passwords in configs file
-    -store passwords in environment variables
-    - For this exercise, I defined env password for mail server in terminal by entering:
-            export app_password=(password here)
-            then I ran nodemon index.js
-    - in development env I manually set env variable
-    - I store passwords in env var and then read them using config module
-    - in config folder, I added folder customer-environment-variables.json
-    - IN this file, I define the mapping of config settings to env vars
-    - Below I displayed password of mail server by using dot notation
-    - this config object looks at various sources to find value for config
-    - the password is read from env variable*/
-
+/*
+- Below I displayed password of mail server by using dot notation
+- this config object looks at various sources to find value for config
+- the password is read from env variable*/
 console.log('Mail Password:' + config.get('mail.password'));
 
 
@@ -140,6 +75,18 @@ console.log('Mail Password:' + config.get('mail.password'));
     -it may only be best to use for short periods of time and then turn it off
  -by setting different environment variables and writing code to say
    when to turn it on based off current environment*/
+
+   /*we want to enable logging of http requests only on
+    development machine so, I need to say when to turn it on:*/
+if(app.get('env') === 'development') {
+    app.use(morgan('tiny'));
+    debug('Morgan enabled');
+}
+
+/* SO now if I set my environment var in terminal to production, and
+run app again, morgan will not be enabled. To set env var in terminal:
+    1) export NODE_ENV=production
+    2) nodemon (then name of file to run)/*
 app.use(morgan('tiny'));
 /****************************************************** */
 
@@ -155,7 +102,6 @@ app.use(morgan('tiny'));
      1)specify path or url and callback function (aka route handler)
      2)then we need to listen on a given port
 */
-
 app.get('/', (req, res) => {
     //used pug template engine and used render to send html markup to client
     //when building RESTful services, we don't really need view engine/template engine
