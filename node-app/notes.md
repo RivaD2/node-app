@@ -355,5 +355,6 @@ REGISTRY
         -this is used to override the past templates
         -all templates go in folder called views which is in root of application
     `app.set('views', './views');`
+    - when building RESTful services, templating engines are not necessarily needed
 
 */
