@@ -111,7 +111,7 @@ app.set('views', './views')
     - I then loaded the config module at the top of file storing it in const
     */
 
-// congig object has get() and arg to specify name of config property
+// config object has get() and arg to specify name of config property
 console.log('Application Name:' + config.get('name'));
 
 //I want mail server, I need to access 'host' in 'mail'. Used dot notation.
@@ -120,7 +120,7 @@ console.log('Mail Server:' + config.get('mail.host'));
 /*never store passwords in configs file
     -store passwords in environment variables
     - For this exercise, I defined env password for mail server in terminal by entering:
-            export app_password=1234
+            export app_password=(password here)
             then I ran nodemon index.js
     - in development env I manually set env variable
     - I store passwords in env var and then read them using config module
@@ -249,36 +249,6 @@ app.post('/api/courses', (req, res) => {
 })
 /*********************************************** */
 
-//USING POSTMAN:
-//to call http services, we use chrome extension called POSTMAN
-    // I went to postman and added in post route with url of http://localhose:5000/api/courses
-    // I clicked on 'body' tab and selected 'raw' and then 'JSON' to put JSON in body of request
-    /* I put JSON object in body and added name prop in object
-    {
-        "name": "new course"
-    }
-       - after clicking send, the body of response was this:
-        {    //now we have four courses in our array
-            "id": 4,
-            "name": "new course"
-        }
-        - in this implementation I assumed that there is an obj with name prop in
-        body of request
-        -what if client forgets to send prop or sends invalid name?
-        - that is where input validation comes in*/
-/************************************************ */
-/*INPUT VALIDATION:
- - as a best practice, never trust what client sends you
- - I should always validate input
- - in this example, because I am dealing with a simple obj with one prop of name,
-        I can write some validation logic in the post route.
-- in the real world, objects will be more complext
-- we don't want validation logic to be too complex at beginning of route handler
-- node has a package that makes validation easy
-- so i ran npm i joi
-- I loaded the module at the top of the page and stored it in const Joi */
-
-/************************************** */
 
 //HOW TO UPDATE  A COURSE
 
@@ -314,14 +284,13 @@ function validateCourse(course) {
          and that it is required*/
         name: Joi.string().min(3).required()
     };
-    //this  method returns an obj so we store it in const
      return  Joi.validate(course, schema);
 }
 
 /**************************************** */
 
 //HOW TO DELETE A COURSE
-//specifying param since I am deleting ine course
+//specifying param since I am deleting one course
 app.delete('/api/courses/:id', (req, res) => {
 //Look up course with id and if not found, return 404 error
 const course = courses.find(c => c.id === parseInt(req.params.id));
