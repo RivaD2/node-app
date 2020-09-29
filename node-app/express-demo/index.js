@@ -76,6 +76,23 @@ app.use(middleware);
 app.use(express.static('public'));
 app.use(helmet());
 
+/************************ */
+/* TEMPLATING ENGINES:
+    - sometimes we will want to return html markup to the client
+    - Templating engines come into play here
+    - Mustache, pug, and EJS are most popular
+    - For this demo I used pug to generate html and return it to client
+    - npm i pug
+    - have to set view engine for application
+    - name of property is view engine and template is pug
+    - express will internally load the module so we don't have to require it*/
+app.set('view engine', 'pug');
+//this is used to override the past templates
+//all templates go in folder called views which is in root of application
+app.set('views', './views')
+
+
+
 /*************************************************************** */
 
 /*CONFIGURATION:
@@ -140,7 +157,9 @@ app.use(morgan('tiny'));
 */
 
 app.get('/', (req, res) => {
-    res.send('Hello World');
+    //used pug template engine and used render to send html markup to client
+    //when building RESTful services, we don't really need view engine/template engine
+    res.render('index', {title: 'My Express App', message: 'Hello'});
 });
 
 //getting list of courses
