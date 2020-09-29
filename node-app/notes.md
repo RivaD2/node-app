@@ -152,28 +152,26 @@ REGISTRY
 
 /*
 
-- to call http services, we use chrome extension called POSTMAN
-- I went to postman and added in post route with url of 'http://localhose:5000/api/courses'
-- I clicked on 'body' tab and selected 'raw' and then 'JSON' to put JSON in body of request
- - I put JSON object in body and added name prop in object:
+    - to call http services, we use chrome extension called POSTMAN
+    - I went to postman and added in post route with url of 'http://localhose:5000/api/courses'
+    - I clicked on 'body' tab and selected 'raw' and then 'JSON' to put JSON in body of request
+    - I put JSON object in body and added name prop in object:
 
-    {
-        "name": "new course"
-    }
-       - after clicking send, the body of response was this:
-
-        {    //now we have four courses in our array
-            "id": 4,
+        {
             "name": "new course"
         }
+        - after clicking send, the body of response was this:
 
+            {    //now we have four courses in our array
+                "id": 4,
+                "name": "new course"
+            }
+    - in this implementation I assumed that there is an obj with name prop in
+            body of request
+            -what if client forgets to send prop or sends invalid name?
+            - that is where input validation comes in*/
 
-- in this implementation I assumed that there is an obj with name prop in
-        body of request
-        -what if client forgets to send prop or sends invalid name?
-        - that is where input validation comes in*/
-
-*/
+    */
 
 ## INPUT VALIDATION
 
@@ -188,6 +186,8 @@ REGISTRY
     - node has a package that makes validation easy
     - so i ran npm i joi
     - I loaded the module at the top of the page and stored it in const Joi
+    - Joi is a framework, and can be used in any type of node project. This is great for people using express or restify, for example.
+    - Besides user validation, Joi can be used to define database schemas
 
 */
 
@@ -195,9 +195,9 @@ REGISTRY
 
 /*
 
-    - Environments and storing config settings go hand-in-han and
+    - Environments and storing config settings go hand-in-hand and
     overriding these settings in each environment
-    - In development environemnt I am going to use a different
+    - In development environment I am going to use a different
     database or mail server
     - so I learned how to use config settings and how to override them
     - I used npm config for this
@@ -210,8 +210,9 @@ REGISTRY
     - I then loaded the config module at the top of file storing it in const
     - config object has get() and arg to specify name of config property
 
-**never store passwords in configs file**
-    -store passwords in environment variables
+    **never store passwords in configs file**
+
+    - store passwords in environment variables
     - For this exercise, I defined env password for mail server in terminal by entering:
             export app_password=(password here)
             then I ran nodemon index.js
@@ -230,7 +231,7 @@ REGISTRY
 
     - I can specify formats within the function for morgan
     - everytime request is sent to server, it will be logged
-    - morgan logs request to terminal but I can configure it to write it to log file
+    - morgan logs requests to terminal but I can configure it to write it to log file
     - this will impact request processing pipeline, so maybe it is not best in production
     - it may only be best to use for short periods of time and then turn it off
     - by setting different environment variables and writing code to say
@@ -242,19 +243,18 @@ REGISTRY
 
 /*
 
-    -when I call express.json() this method returns middleware
-    - then I call app.use to use middleware in request processing pipeline
-    - middleware function takes a request obj and either returns response to client
+    - When I call express.json() this method returns middleware
+    - Then I call app.use to use middleware in request processing pipeline
+    - A middleware function takes a request obj and either returns response to client
     or passes control to another middleware function
     - In express, every route handler function we have (app.get()) is technically a middleware function
-    - it terminates the request/response cycle
+    - It terminates the request/response cycle
     - app.use(expres.json()) reads request when it is called
-    - the job of this middleware function is to read request and if json obj is in body of request,
-        it will parse the body of the req into json obj, and set request.body property
+    - The job of this middleware function is to read request and if json obj is in body of request, it will parse the body of the req into json obj, and set request.body property
     - We can create custom middleware functions so that every request we get on server
     will go through the middleware function
-    - middleware functions are called in sequence!
-    -if middleware function does not pass control to another middlware
+    - Middleware functions are called in sequence!
+    - If middleware function does not pass control to another middlware
     function to end req/response cycle, our request will end up hanging...
     - Each middleware function should be in separate module
 */
@@ -263,15 +263,14 @@ REGISTRY
 
 /*
 
-    - Method(when building route) takes two args
+    - app.get() is a method(used when building route) that takes two args
     - First is the path or url
     - The second arg, is a callback function
-    - This function will be called when we have
-        http get request to this endpoint
-    - This callback has two args, req, and res
+    - This function will be called when we have http get request to this endpoint
+    - This callback has two args, (req, res)
     - This is how we define a route:
-        1)specify path or url and callback function (aka route handler)
-        2)then we need to listen on a given port
+        1) specify path or url and callback function (aka route handler)
+        2) then we need to listen on a given port
 
 */
 
@@ -293,7 +292,7 @@ REGISTRY
 
 */
 
-## URL ENCODED
+## URLENCODED
 
 /*
 
@@ -311,30 +310,32 @@ REGISTRY
 
 /*
 
-    ****'process' is a global obj in node that gives us access to current process**
-        - this process obj has a prop called env which gives us environment vars
-        - there is a standard env var called ENV
-        - if it is not set, it will return undefined
-        - we can set this to staging, testing or production*/
+    **process' is a global obj in node that gives us access to current process**
+
+        - This process obj has a prop called env which gives us environment vars
+        - There is a standard env var called ENV
+        - If it is not set, it will return undefined
+        - We can set this to staging, testing or production*/
     //Ex 1: console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
     /*another way to get current environment is the app object:
-        -this method uses env var to detect the current environment
-        -if env var is not set, it will return DEVELOPMENT by default
-        -app.get('env')
-        -Ex 2: console.log(`app:${app.get('env')}`);
-        - we want to enable logging of http requests only on
+        - This method uses env var to detect the current environment
+        - If env var is not set, it will return DEVELOPMENT by default
+        - app.get('env')
+        - Ex 2: console.log(`app:${app.get('env')}`);
+        - We want to enable logging of http requests only on
         development machine so, I need to say when to turn it on.
         For example, when using morgan, I can say:
 
-    `if(app.get('env') === 'development') {
+    if(app.get('env') === 'development') {
             app.use(morgan('tiny'));
             debug('Morgan enabled');
-        }`
+        }
 
-    -SO now if I set my environment var in terminal to production, and
+    - SO now if I set my environment var in terminal to production, and
      run app again, morgan will not be enabled. To set env var in terminal:
-    1) export NODE_ENV=production
-    2) nodemon (then name of file to run)
+
+      1) export NODE_ENV=production
+      2) nodemon (then name of file to run)
 
 */
 
@@ -342,14 +343,14 @@ REGISTRY
 
 /*
 
-    - sometimes we will want to return html markup to the client
+    - Sometimes we will want to return html markup to the client
     - Templating engines come into play here
     - Mustache, pug, and EJS are most popular
     - For this demo I used pug to generate html and return it to client
     - npm i pug
-    - have to set view engine for application
-    - name of property is view engine and template is pug
-    - express will internally load the module so we don't have to require it
+    - To use templating engine, I have to set view engine for application
+    - The name of the property is 'view engine' and template I used is pug
+    - Express will internally load the pug module so we don't have to require it
 
    `app.set('view engine', 'pug');`
         -this is used to override the past templates
