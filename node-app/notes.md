@@ -341,6 +341,7 @@ REGISTRY
 ## TEMPLATING ENGINES
 
 /*
+
     - sometimes we will want to return html markup to the client
     - Templating engines come into play here
     - Mustache, pug, and EJS are most popular
