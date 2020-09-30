@@ -403,6 +403,6 @@ REGISTRY
               - Then I load new module in index.js as const home = require(./routes/courses)
               - Finally, I added app.use('/', home);
               - In index.js, In now only have start up code for application
-            - ADDED MIDDLEWARE.JS to hold multiple middleware functions and moved
+            - ADDED middleware.js to hold multiple middleware functions and moved
                 logger.js inside.
 
