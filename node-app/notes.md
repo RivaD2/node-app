@@ -225,19 +225,6 @@ REGISTRY
     - the password is read from env variable
 */
 
-## USING MORGAN
-
-/*
-
-    - I can specify formats within the function for morgan
-    - everytime request is sent to server, it will be logged
-    - morgan logs requests to terminal but I can configure it to write it to log file
-    - this will impact request processing pipeline, so maybe it is not best in production
-    - it may only be best to use for short periods of time and then turn it off
-    - by setting different environment variables and writing code to say
-    - when to turn it on based off current environment
-
-*/
 
 ## MIDDLEWARE /(express.json()),express.static(), express.urlencoded()) etc.
 
@@ -257,6 +244,41 @@ REGISTRY
     - If middleware function does not pass control to another middlware
     function to end req/response cycle, our request will end up hanging...
     - Each middleware function should be in separate module
+
+
+## URLENCODED(MIDDLEWARE)
+
+      - this is another built-in middleware function
+      - this parses incoming requests with url encoded payloads
+      - that is a request with a body like this:
+                      key=value&key=value
+      - this is a traditional approach
+      - if I have a html form with an input fields, and post form to server,
+          the body of the request would look like the above
+
+    ## USING MORGAN(MIDDLEWARE)
+
+      - I can specify formats within the function for morgan
+      - everytime request is sent to server, it will be logged
+      - morgan logs requests to terminal but I can configure it to write it to log file
+      - this will impact request processing pipeline, so maybe it is not best in production
+      - it may only be best to use for short periods of time and then turn it off
+      - by setting different environment variables and writing code to say
+      - when to turn it on based off current environment
+
+    ## EXPRESS.JSON() (MIDDLEWARE)
+
+      - app.use(express.json()) reads request when it is called
+      - The job of this middleware function is to read request and if json obj
+          is in body of request,it will parse the body of the req into json obj,
+          and set request.body property
+
+    ## EXPRESS.STATIC()(MIDDLEWARE)
+      - static is another built in middleware function
+      - static serves all static files like css,images etc.
+      - I will put all static assets inside public folder
+      - our static content is always at root of the site*/
+
 */
 
 ## GET REQUESTS
@@ -289,20 +311,6 @@ REGISTRY
     starts listening on given port
 
     `app.listen(port, () => console.log(`Listening on port ${port}...`));`
-
-*/
-
-## URLENCODED
-
-/*
-
-    - this is another built-in middleware function
-    - this parses incoming requests with url encoded payloads
-    - that is a request with a body like this:
-                    key=value&key=value
-    - this is a traditional approach
-    - if I have a html form with an input fields, and post form to server,
-        the body of the request would look like the above
 
 */
 
@@ -359,3 +367,42 @@ REGISTRY
     - when building RESTful services, templating engines are not necessarily needed
 
 */
+
+## STRUCTURING APPLICATION
+
+    - first, take all code for courses/api and put it into sep file
+    - For every API endpoint, we need a separate file/module
+    -  For example, all enpoints for courses, would be in courses.js
+    -  Created new folder in route of project called routes
+    -  Added new file called courses.js
+    -  In index.js I selected all code for /api/courses and
+        put it into courses.js
+    - Refactored courses routes:
+          - I loaded express and assigned to const
+          - In index.js, I had to change all app.get, app.post etc.
+            to router.get, router.put, router.post etc.
+          - at the end of the module, I exported router by module.exports = router
+          - In summary, get router on the top, add routes and then export router
+             at end of module
+          - Then I had to load courses module inside index.js module by
+            saying const courses = require('./courses);
+          - called app.use with two args ('./api/courses', courses)
+          - app.use uses two args ('path', router object exported);
+          - I tell Express that any routes that start with api/courses
+              use this router(the router that I loaded on courses module)
+          - then I can make my routes shorter in courses.js, I don't need to repeat
+              api/courses on every route because in index.js I told Express that any
+              routes that start with api/courses should be handled by courses router
+          - the routes changed to '/' for all api.courses
+          - for routes that had paramater, I added '/:id'
+          - In routes folder, I added home.js
+              - I loaded express in home.js ---> const express = require('express)
+              - Then I get router by ----> const router = express.Router()
+              - In home.js I added route that renders the index.js page
+              - Export the router with module.exports = router;
+              - Then I load new module in index.js as const home = require(./routes/courses)
+              - Finally, I added app.use('/', home);
+              - In index.js, In now only have start up code for application
+            - ADDED MIDDLEWARE.JS to hold multiple middleware functions and moved
+                logger.js inside.
+
