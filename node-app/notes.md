@@ -370,8 +370,10 @@ REGISTRY
 
 ## STRUCTURING APPLICATION
 
-    - first, take all code for courses/api and put it into sep file
-    - For every API endpoint, we need a separate file/module
+/*
+
+    -  First, take all code for courses/api and put it into sep file
+    -  For every API endpoint, we need a separate file/module
     -  For example, all enpoints for courses, would be in courses.js
     -  Created new folder in route of project called routes
     -  Added new file called courses.js
@@ -381,7 +383,7 @@ REGISTRY
           - I loaded express and assigned to const
           - In index.js, I had to change all app.get, app.post etc.
             to router.get, router.put, router.post etc.
-          - at the end of the module, I exported router by module.exports = router
+          - At the end of the module, I exported router by module.exports = router
           - In summary, get router on the top, add routes and then export router
              at end of module
           - Then I had to load courses module inside index.js module by
@@ -390,11 +392,11 @@ REGISTRY
           - app.use uses two args ('path', router object exported);
           - I tell Express that any routes that start with api/courses
               use this router(the router that I loaded on courses module)
-          - then I can make my routes shorter in courses.js, I don't need to repeat
+          - Then I can make my routes shorter in courses.js, I don't need to repeat
               api/courses on every route because in index.js I told Express that any
               routes that start with api/courses should be handled by courses router
-          - the routes changed to '/' for all api.courses
-          - for routes that had paramater, I added '/:id'
+          - The routes changed to '/' for all api.courses
+          - For routes that had paramater, I added '/:id'
           - In routes folder, I added home.js
               - I loaded express in home.js ---> const express = require('express)
               - Then I get router by ----> const router = express.Router()
@@ -405,4 +407,56 @@ REGISTRY
               - In index.js, In now only have start up code for application
             - ADDED middleware.js to hold multiple middleware functions and moved
                 logger.js inside.
+*/
 
+## PROMISES
+
+/*
+
+    - A Promise is an object that holds an eventual result of async operation
+    - Initially it is in a pending state
+    - Then it kicks off async operation that completes successfully or fails
+    - ANYWHERE I HAVE AN ASYNC FUNCTION THAT TAKES A CALLBACK,
+        I SHOULD MODIFY FUNCTION TO RETURN A PROMISE
+    - New Promises take an arg that is a function with two params
+    - The two params are resolve and reject
+    - Then inside the function, the async work will kick off
+    - This work may be calling web service, accessing a database, setting timer etc.
+    - Eventually when aync work completes, we should have a value or an error
+    - If there is a value, we need to return it to consumer of Promise
+    - The promise object promises us that it will give us a result of an async operation
+    - The way we send this to the consumer is using resolve and reject
+    - Resolve and reject are functions and we can pass value to them when calling them
+    - For example, resolve(1);
+    - If error, then reject(new Error('message'))
+
+*/
+
+## CALLBACKS AND CALLBACK HELL
+
+/*
+
+    - A callback is a function passed into another function as an argument to be
+      executed later
+    -  Instead of immediately returning some result like most functions, functions that use callbacks take some time to produce a result.
+    - As we create more functions, they require callbacks and this
+       structure ends up being nested, or tree like and it hard to read
+    - The technique I used, was to replace anonymous functions with named functions
+      however, I can modularize and keep code shallow to mitigate callback hell
+    - Using these techniques flattens the structure of code and makes it easier to read
+
+*/
+
+## ASYNC/AWAIT
+
+/*
+
+    - When we use await operator, we don't have to go through chain of calls to then()
+    - When I use await operator, I need to decorate function with async
+    - Async and await are built on top of Promises
+    - Internally, JS will convert code to something like what happens below
+        with all the .then()'s
+    - Anytime I am calling a function that returns a promise, I can await the result
+       and get result by calling async function
+    - With async functions, instead of .then and .catch, I wrap the code
+        in a try-catch block
