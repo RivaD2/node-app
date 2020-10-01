@@ -21,8 +21,8 @@ app.use(express.static('public'));
 app.use(helmet());
 /* Here we supply two args, a path, and the router object that we imported
     - we are telling Express that any routes that start with api/courses,
-    use this router. The router that we loaded from the courses module.
-app.use('/api/courses', courses);*/
+       use this router. The router that we loaded from the courses module.*/
+app.use('/api/courses', courses);
 app.use('/', home);
 
 
@@ -30,14 +30,14 @@ app.use('/', home);
 
 /* TEMPLATING ENGINES:
 
-    - sometimes we will want to return html markup to the client
+    - Sometimes we will want to return html markup to the client
     - Templating engines come into play here
     - Mustache, pug, and EJS are most popular
     - For this demo I used pug to generate html and return it to client
     - npm i pug
-    - have to set view engine for application
-    - name of property is view engine and template is pug
-    - express will internally load the module so we don't have to require it*/
+    - I have to set view engine for application
+    - Name of property is view engine and template is pug
+    - Express will internally load the module so we don't have to require it*/
 app.set('view engine', 'pug');
 //this is used to override the past templates
 //all templates go in folder called views which is in root of application
@@ -54,18 +54,19 @@ console.log('Mail Server:' + config.get('mail.host'));
 
 /*
 - Below I displayed password of mail server by using dot notation
-- this config object looks at various sources to find value for config
-- the password is read from env variable*/
+- This config object looks at various sources to find value for config
+- The password is read from env variable*/
 console.log('Mail Password:' + config.get('mail.password'));
 
 
 /*I can specify formats within the function for morgan
-    -everytime request is sent to server, it will be logged
-    -morgan logs request to terminal but I can configure it to write it to log file
-    -this will impact request processing pipeline, so maybe it is not best in production
-    -it may only be best to use for short periods of time and then turn it off
- -by setting different environment variables and writing code to say
-   when to turn it on based off current environment*/
+    - Everytime request is sent to server, it will be logged
+    - Morgan logs request to terminal but I can configure it to write it to log file
+    - This will impact request processing pipeline, so maybe it is not best in
+      production
+    - It may only be best to use for short periods of time and then turn it off
+    - By setting different environment variables and writing code to say
+      when to turn it on based off current environment*/
 
    /*we want to enable logging of http requests only on
     development machine so, I need to say when to turn it on:*/
@@ -74,21 +75,23 @@ if(app.get('env') === 'development') {
     debug('Morgan enabled');
 }
 
-/* SO now if I set my environment var in terminal to production, and
-run app again, morgan will not be enabled. To set env var in terminal:
-    1) export NODE_ENV=production
-    2) nodemon (then name of file to run)/*
+/*
+   - SO now if I set my environment var in terminal to production, and
+    run app again, morgan will not be enabled. To set env var in terminal:
+        1) export NODE_ENV=production
+        2) nodemon (then name of file to run)*/
 app.use(morgan('tiny'));
 
 
 
 
 /*PORT
--use environment variable called PORT
--This value is set outside the application
-- We need to add environment variable in terminal
-- To set env var, in terminal, run export PORT=5000 (or what
-    port you want nodemon to listen on)*/
+    - Using environment variable called PORT
+    - This value is set outside the application
+    - I need to add environment variable in terminal
+    - To set env var, in terminal, run export PORT=5000 (or what
+        port you want nodemon to listen on)
+*/
 
 const port = process.env.PORT || 3000;
 
