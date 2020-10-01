@@ -44,7 +44,7 @@ const courses = [
 //this endpoint gets all courses
 router.get('/', (req, res) => {
     /* - In order to read param use :
-       - For now we will send this to the client
+       - For now we will send this to the client*/
     res.send(courses);
 });
 
