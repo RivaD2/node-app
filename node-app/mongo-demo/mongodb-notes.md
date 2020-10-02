@@ -13,13 +13,15 @@
 
 2. **Connect to Database**
 
+```
+    mongoose.connect('mongodb://localhost/playground')
 
-    `mongoose.connect('mongodb://localhost/playground')`
     //better to use debug module rather than console.log
-    `.then(() => console.log('Connected to MongoDB...'))
-    .catch(err => console.error('Could not connect to MongoDB...',err));`
 
-    ```
+    .then(() => console.log('Connected to MongoDB...'))
+   .catch(err => console.error('Could not connect to MongoDB...',err));
+
+```
 3. **Create a schema (even though mongoDB is schemaless, we still need a schema)**
 
     - I created the database called playground
