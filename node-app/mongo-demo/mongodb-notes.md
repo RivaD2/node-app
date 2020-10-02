@@ -83,7 +83,7 @@ gives me a  class**
 
     - This is all part of building a more complex query
 
-8. ** Using `.find()`**
+8. **Using `.find()`**
 
             - .find() in this practice app gets a list of documents
             - .find() returns a Document Query obj and it is like a promise so we can await it
