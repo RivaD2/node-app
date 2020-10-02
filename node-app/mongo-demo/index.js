@@ -45,11 +45,11 @@ mongoose.connect('mongodb://localhost/playground')
 
 
 
-/* Once I have a schema, I need to compile schema into a modal and the modal gives me a class
+/* Once I have a schema, I need to compile schema into a model and the model gives me a class
    - Then I can create an obj based on class and obj maps to document in mongoDB database
     - First, an obj is an instance of a class, the class is a blueprint, and obj
         is instance of that blueprint
-    - So, I need a class called course and then create instances of that class like nodeCourse
+    - So, I need to create a class called course and then create instances of that class (like nodeCourse)
     - Then I can save nodeCourse to the database
     - Mongoose object has method called model() that takes two args
             - First arg is the singular name of collection that the model is for (collection of courses)
