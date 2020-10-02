@@ -122,6 +122,7 @@ getCourses();
 async function updateCourse(id) {
     //get course with given id
     const course = await Course.findById(id);
+    console.log(course);
     //if there is no course with given id, return immediately otherwise, update properties
     if(!course) return;
 
@@ -140,5 +141,6 @@ async function updateCourse(id) {
 }
 //went to MongoDB Compass and got valid course id
 updateCourse('5a68fde3f09ad7646ddec17e');
+console.log(updateCourse);
 
 

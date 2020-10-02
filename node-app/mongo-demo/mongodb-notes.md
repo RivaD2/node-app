@@ -13,11 +13,11 @@
 
 2. **Connect to Database**
 
-    ```
-    mongoose.connect('mongodb://localhost/playground')
-            //better to use debug module rather than console.log
-    .then(() => console.log('Connected to MongoDB...'))
-    .catch(err => console.error('Could not connect to MongoDB...',err));
+
+    `mongoose.connect('mongodb://localhost/playground')`
+    //better to use debug module rather than console.log
+    `.then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.error('Could not connect to MongoDB...',err));`
 
     ```
 3. **Create a schema (even though mongoDB is schemaless, we still need a schema)**
@@ -41,10 +41,10 @@ gives me a  class**
     - So, I need to create a class called course and then create instances of that class (like nodeCourse)
     - Then I can save nodeCourse to the database
     - Mongoose object has method called model() that takes two args
-            - First arg is the singular name of collection that the model is for (collection of courses)
-                but singular name is Course
-            - Second arg is the schema that defines shape of documents in this collection
-            `const Course = mongoose.model('Course', courseSchema);`
+    - The first arg is the singular name of collection that the model is for (collection of courses) but  the singular name is Course
+    - The second arg is the schema that defines shape of documents in this collection
+
+    `const Course = mongoose.model('Course', courseSchema);`
 
 5. **Next, create the course obj and in the constructor pass an object to initialize the course obj**
 
@@ -65,21 +65,27 @@ gives me a  class**
 
      - What if the Courses object has a price property?
      - I can replace a simple value with object to express a concept:
-            - Using .find() I will return courses with prices with different values
-            ` .find({ price: {$gte: 10, $lte: 20 } })`
-     - If I wanted courses that are 10, 15 or 20 dollars:
+        - Using .find() I will return courses with prices with different values
+
+        ` .find({ price: {$gte: 10, $lte: 20 } })`
+        - If I wanted courses that are 10, 15 or 20 dollars:
             - I would use find() and pass in object with array values
-            `.find({ price: {$in: [10, 15, 20] } })`
+
+         `.find({ price: {$in: [10, 15, 20] } })`
         
-            - I can customize a query by applying `limit()`, `sort(by passing object)`,
+    - I can customize a query by applying:
+
+         `limit()`,
+         `sort(by passing object)`,
                and selecting properties that I want to return using `select()`
-            - This is all part of building a more complex query
+
+    - This is all part of building a more complex query
 
 8. ** Using `.find()`**
 
-            - find() in this practice app gets a list of documents
+            - .find() in this practice app gets a list of documents
             - .find() returns a Document Query obj and it is like a promise so we can await it
               and get result
-            - I can pass a filter in find() by adding key value pairs
+            - I can pass a filter in ,find() by adding key value pairs
 
     
