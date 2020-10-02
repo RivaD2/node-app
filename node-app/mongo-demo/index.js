@@ -65,9 +65,9 @@ const Course = mongoose.model('Course', courseSchema);
 */
 async function createCourse() {
     const course = new Course ({
-        name: 'Node.js Course',
+        name: 'Angular Course',
         author: 'Riva',
-        tags: ['node', 'backend'],
+        tags: ['angular', 'frontend'],
         isPublished: true
     });
 
@@ -84,6 +84,29 @@ async function createCourse() {
 const result = await course.save();
 console.log(result);
 }
+
+//retrieving documents from mongoDB
+//This will return a second object, the Angular Course as this gets all courses
+async function getCourses() {
+    //Course class has methods for querying documents
+    const courses = await Course
+        /*
+            - Find() gets list of documents/
+            - .find() returns a Document Query obj and it is like a promise so we can await it
+            and get result
+            - I can pass a filter here by adding key value pairs
+        */
+        .find({ author: 'Riva', isPublished: true})
+        /*Customizing query by applying limit, sorting(by passing object),
+            select properties that I want to return*/
+        .limit(10)
+        //indicates ascending order, descending is -1
+        .sort({ name: 1})
+        .select({ name: 1, tags: 1})
+    console.log(courses);
+}
+
+getCourses();
 createCourse();
 
 
