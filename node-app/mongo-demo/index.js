@@ -58,14 +58,19 @@ console.log(result);
 //Retrieving documents from mongoDB:
 //This function will return a second object, the Angular Course as this gets all courses
 async function getCourses() {
+    /*
+    - These values are hardcoded, but in real app, I would pass these
+      values as query string params in RESTful api
+    - For ex: /apt/courses?pageNumber=2&pageSize=10
+    - In order to implement pagination, I need to skip all documents from previous page using skip()
+    */
+    const PageNumber = 2;
+    const pageSize = 10;
+
     //Course class has methods for querying documents
     const courses = await Course
-        /*
-            - find() gets list of documents
-            - .find() returns a Document Query obj and it is like a promise so we can await it
-            and get result
-            - I can pass a filter in find() by adding key value pairs
-        */
+
+         //I can pass a filter in find() by adding key value pairs
          .find({ author: 'Riva', isPublished: true})
 
         /*
@@ -77,13 +82,18 @@ async function getCourses() {
         */
         .or([ {author: 'Riva'}, {isPublished: true} ])
         //.and([ ])
-        .limit(10)
+        //this would give me the documents in a given page
+        .limit(pageSize)
+        //skip() goes hand-in-hand with skip() and is used for pagination
+        .skip((pageNumber - 1) * pageSize)
         //indicates ascending order, descending is -1
         .sort({ name: 1})
         //selecting properties I want to return
         .select({ name: 1, tags: 1})
-        //this log shows that I now only have three properties
+        //counts returns count of documents that match our filters in find();
+        .count();
 
+//this log shows that I now only have three properties
     console.log(courses);
 }
 

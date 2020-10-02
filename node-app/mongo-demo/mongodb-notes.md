@@ -74,6 +74,12 @@ gives me a  class**
             - I can customize a query by applying `limit()`, `sort(by passing object)`,
                and selecting properties that I want to return using `select()`
             - This is all part of building a more complex query
-    
+
+8. ** Using `.find()`**
+
+            - find() in this practice app gets a list of documents
+            - .find() returns a Document Query obj and it is like a promise so we can await it
+              and get result
+            - I can pass a filter in find() by adding key value pairs
 
     
