@@ -1,0 +1,6 @@
+**Exercise-2**
+
+- Write a program and get all published frontend and backend courses
+- Sort them by their price in descending order
+- Pick only their name and author
+- Display them
