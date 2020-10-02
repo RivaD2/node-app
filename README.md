@@ -15,3 +15,14 @@
 - Handling and logging errors
 - Integration Testing
 - Test driven development
+
+**TOOLS USED:**
+
+   - Node.js
+   - MongoDB
+   - MongoDB Compass
+   - MongoDB Atlas
+   - mongoose
+   - Joi
+   - _underscore
+   - pug
