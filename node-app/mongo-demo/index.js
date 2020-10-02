@@ -110,6 +110,15 @@ async function getCourses() {
                and selecting properties that I want to return
             - This is all part of building a more complex query
         */
+        /*
+        - using logical operator or and I pass array of two objects
+            that act as filters just like in .find()
+        - Using or() I will get authors with Riva or courses that
+          are published
+        - The .and() method works in the same way
+        */
+        .or([ {author: 'Riva'}, {isPublished: true} ])
+        .and([ ])
         .limit(10)
         //indicates ascending order, descending is -1
         .sort({ name: 1})
@@ -123,17 +132,7 @@ async function getCourses() {
 getCourses();
 createCourse();
 
-/*Comparison Operators in MongoDB:
-    - In MongoDb we have operators for comparing values
-    - The standard operators that MongoDB understands are available in mongoose
-    - eq (equal)
-    - ne (not equal)
-    - gt (greater than)
-    - gte (greater than or equal to)
-    - lt (less than)
-    - lte (less than or equal to)
-    - in
-    - nin (not in)
+
 
 
 

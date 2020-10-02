@@ -460,3 +460,22 @@ REGISTRY
        and get result by calling async function
     - With async functions, instead of .then and .catch, I wrap the code
         in a try-catch block
+
+## COMPARISON OPERATORS IN mongoDB
+
+/*
+    - In mongoDB we have operators for comparing values
+    - The standard operators that MongoDB understands are available in mongoose
+    - eq (equal)
+    - ne (not equal)
+    - gt (greater than)
+    - gte (greater than or equal to)
+    - lt (less than)
+    - lte (less than or equal to)
+    - in
+    - nin (not in)
+
+## LOGICAL OPERATORS
+    - or
+    - and
+*/
