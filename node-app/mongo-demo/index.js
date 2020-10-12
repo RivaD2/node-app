@@ -33,8 +33,6 @@ mongoose.connect('mongodb://localhost/playground')
 const Course = mongoose.model('Course', courseSchema);
 
 
-
-
 /*
 - Create course obj and in constructor and pass object to initialize the course obj
 - In MongoDB I don't have to define a table, I just create an object and store it in the database
@@ -43,11 +41,10 @@ const Course = mongoose.model('Course', courseSchema);
 async function createCourse() {
     const course = new Course ({
         name: 'Angular Course',
-        author: 'Riva',
+        author: 'Mosh',
         tags: ['angular', 'frontend'],
         isPublished: true
     });
-
 /*
 - Course object has a method called save() and this will be an asyc operation
 - The result of this operation will be ready in the future and so
@@ -57,7 +54,7 @@ async function createCourse() {
 const result = await course.save();
 console.log(result);
 }
-createCourse();
+ createCourse();
 
 
 
@@ -76,10 +73,6 @@ async function getCourses() {
    const pageSize = 10;
     //Course class has methods for querying documents
     const courses = await Course
-
-         //I can pass a filter in find() by adding key value pairs
-        .find({ author: 'Riva', isPublished: true})
-
         /*
         - using logical operator 'or' and I pass array of two objects
             that act as filters just like in .find()
@@ -89,7 +82,8 @@ async function getCourses() {
         */
         //.or([ {author: 'Riva'}, {isPublished: true} ])
         //.and([ ])
-
+        //I can pass a filter in find() by adding key value pairs
+        .find({ author: 'Riva', isPublished: true})
         //this would give me the documents in a given page
         .limit(pageSize)
         //skip() goes hand-in-hand with skip() and is used for pagination
@@ -102,7 +96,7 @@ async function getCourses() {
         .count();
 
 //this log shows that I now only have three properties
-    console.log(courses);
+console.log(courses);
 }
 getCourses();
 
@@ -121,26 +115,23 @@ getCourses();
 
 async function updateCourse(id) {
     //get course with given id
-    const course = await Course.findById(id);
-    console.log(course);
-    //if there is no course with given id, return immediately otherwise, update properties
+    const course = await Course.update(id);
+ //if there is no course with given id, return immediately otherwise, update properties
     if(!course) return;
+     course.isPublished = true;
+     course.author = 'Another Author';
+        //instead of setting multiple properties, I can use set();
+        // course.set({
+        //     isPublished: true,
+        //     author: 'Another Author'
+        // });
 
-    // course.isPublished = true;
-    // course.author = 'Another Author';
-    //instead of setting multiple properties, I can use set();
-    course.set({
-        isPublished: true,
-        author: 'Another Author'
-    });
-
-
-    //call save method and it returns promise, so I need to await it and store result
-    const saveCourseResult = await course.save();
-    console.log(saveCourseResult);
+//call save method and it returns promise, so I need to await it and store result
+    const saveCourse = await course.save();
+    console.log(saveCourse);
 }
 //went to MongoDB Compass and got valid course id
 updateCourse('5a68fde3f09ad7646ddec17e');
-console.log(updateCourse);
+console.log(updateCourse, 'course is updated');
 
 
