@@ -113,6 +113,7 @@ router.put('/:id', (req, res) => {
        - If course doesn't exist return 404(resource not found)
        - Otherwise, validate, if invalid, return 400 bad request*/
     const course = courses.find(c => c.id === parseInt(req.params.id));
+    console.log(course);
     if(!course)  return res.status(404).send('The course was not found');
 
 
