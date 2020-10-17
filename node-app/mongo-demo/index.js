@@ -13,16 +13,16 @@ mongoose.connect('mongodb://localhost/playground')
 
 
 //Create a schema structure
-   const courseSchema = new mongoose.Schema({
-       // When this is stored, each obj in array will be key value pair
-       // The key will be the index and the value will be the string
+const courseSchema = new mongoose.Schema({
+// When this is stored, each obj in array will be key value pair
+    // The key will be the index and the value will be the string
     name: String,
     author: String,
     tags: [ String ],
     //date.now will be default value
     date: { type: Date, default: Date.now},
     isPublished: Boolean
-   });
+});
 
 
 /*Mongoose object has method called model() that takes two args
@@ -40,21 +40,21 @@ const Course = mongoose.model('Course', courseSchema);
 */
 async function createCourse() {
     const course = new Course ({
-        name: 'Angular Course',
-        author: 'Mosh',
-        tags: ['angular', 'frontend'],
-        isPublished: true
+        name: 'Mongo',
+        author: 'Anthony',
+        tags: ['MongoDb', 'backend'],
+        isPublished: false
     });
-/*
-- Course object has a method called save() and this will be an asyc operation
-- The result of this operation will be ready in the future and so
-    the method returns a Promise that I can await and then get the result
-- This result is the course obj that is saved in database
-*/
-const result = await course.save();
-console.log(result);
+    /*
+    - Course object has a method called save() and this will be an asyc operation
+    - The result of this operation will be ready in the future and so
+        the method returns a Promise that I can await and then get the result
+    - This result is the course obj that is saved in database
+    */
+    const result = await course.save();
+    console.log(result);
 }
- createCourse();
+//createCourse();
 
 
 
@@ -95,10 +95,10 @@ async function getCourses() {
         //counts returns count of documents that match our filters in find();
         .count();
 
-//this log shows that I now only have three properties
-console.log(courses);
+    //this log shows that I now only have three properties
+    console.log(courses);
 }
-getCourses();
+//getCourses();
 
 
 
@@ -114,24 +114,26 @@ getCourses();
 */
 
 async function updateCourse(id) {
+
     //get course with given id
-    const course = await Course.update(id);
- //if there is no course with given id, return immediately otherwise, update properties
+    const course = await Course.findById(id);
+    console.log('course',course)
+    //if there is no course with given id, return immediately otherwise, update properties
     if(!course) return;
      course.isPublished = true;
-     course.author = 'Another Author';
+     course.author = 'Any author';
         //instead of setting multiple properties, I can use set();
         // course.set({
         //     isPublished: true,
         //     author: 'Another Author'
         // });
 
-//call save method and it returns promise, so I need to await it and store result
+    //call save method and it returns promise, so I need to await it and store result
     const saveCourse = await course.save();
     console.log(saveCourse);
 }
 //went to MongoDB Compass and got valid course id
-updateCourse('5a68fde3f09ad7646ddec17e');
+updateCourse('5f7b82cda221bd1319ca9f42');
 console.log(updateCourse, 'course is updated');
 
 
