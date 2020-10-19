@@ -25,9 +25,10 @@ const courseSchema = new mongoose.Schema({
 });
 
 
-/*Mongoose object has method called model() that takes two args
+/*
+- Mongoose object has method called model() that takes two args
 - First arg is the singular name of collection that the model is for
-(collection of courses) but singular name is Course
+  (collection of courses) but singular name is Course
 - Second arg is the schema that defines shape of documents in this collection
 */
 const Course = mongoose.model('Course', courseSchema);
@@ -80,7 +81,7 @@ async function getCourses() {
           are published
         - The .and() method works in the same way
         */
-        //.or([ {author: 'Riva'}, {isPublished: true} ])
+        .or([ {author: 'Riva'}, {isPublished: true} ])
         //.and([ ])
         //I can pass a filter in find() by adding key value pairs
         .find({ author: 'Riva', isPublished: true})
@@ -109,10 +110,23 @@ async function getCourses() {
         - Modify its properties
         - save()
      Other way is Update First:
-        - update directly in database
+        - update doc directly in database without retrieving it first
         - get the updated document as well (optional)
-*/
+        - update method takes two args, the id and an object
+        - If you want to find by id and update, use findbyIdAndUpDate
+        - We still pass id and objet into the findByIdAndUpdateMethod()
+        - It looks like this...
 
+async function updateCourse(id) {
+    const result = await Course.update({ _id: id },
+    $set: {
+        author: 'Mosh',
+        isPublished: false
+    });
+    const result = await course.save();
+}
+    updateCourse(id goes here)
+*/
 async function updateCourse(id) {
 
     //get course with given id
@@ -122,18 +136,30 @@ async function updateCourse(id) {
     if(!course) return;
      course.isPublished = true;
      course.author = 'Any author';
-        //instead of setting multiple properties, I can use set();
-        // course.set({
-        //     isPublished: true,
-        //     author: 'Another Author'
-        // });
+        /*
+        - instead of setting multiple properties, I can use set();
+           course.set({
+             isPublished: true,
+            author: 'Another Author'
+         });
+         */
 
     //call save method and it returns promise, so I need to await it and store result
     const saveCourse = await course.save();
     console.log(saveCourse);
 }
-//went to MongoDB Compass and got valid course id
+/*
+- went to MongoDB Compass and got valid course id
+- This console returns a new updated course with the properties provided in function
+*/
 updateCourse('5f7b82cda221bd1319ca9f42');
 console.log(updateCourse, 'course is updated');
 
+//removing documents
 
+async function removeCourse(id) {
+  const result =  await  Course.deleteOne({ _id: id });
+  //to get doc that was deleted use Course.findByIdAndRemove()
+  console.log(result);
+}
+removeCourse('5f7b82cda221bd1319ca9f42')
