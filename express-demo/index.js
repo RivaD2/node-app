@@ -1,4 +1,5 @@
 //REQUIRE CALLS //DEPENDENCIES
+const error = require('./middleware/error');
 const config = require('config');
 const express = require('express');
 const app = express();
@@ -24,6 +25,9 @@ app.use(helmet());
        use this router. The router that we loaded from the courses module.*/
 app.use('/api/courses', courses);
 app.use('/', home);
+//passing reference to error handler function
+app.use(error);
+
 
 
 
