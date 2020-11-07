@@ -1,5 +1,5 @@
 # node-app
-**Built a RESTful service with Node, Express and MongoDB, from setup to production with guidance from a Udemy course. My main goals for this app were to go further into the inner workings of Node and really solidify what I learned about back-end functionality and RESTful API's.**
+**Practice project building a RESTful service with Node, Express and MongoDB. My main goals for this app were to go further into the inner workings of Node, CRUD operations, Data validation and Asynchronous JS**
 
 **Udemy Course: Node.js: The Complete Guide to Build Restful API's.**
 
