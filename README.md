@@ -37,19 +37,19 @@ What was covered:
 **For the Mongo-demo you will to install the following:**
 
 1. `npm install MongoDB  mongoose nodemon`
-2. Create a schema and model(even though mongoDB is considered to be schemaless, we still built out a schema. You can read more about getting started with MongoDB [here](https://docs.mongodb.com/manual/tutorial/getting-started/)
+2. Create a schema and model(even though mongoDB is considered to be schemaless, we still build out a schema. You can read more about getting started with MongoDB [here](https://docs.mongodb.com/manual/tutorial/getting-started/)
   
-3. **Connect to Database**
+3. **Connect to the database**
 
 ```
-    mongoose.connect('mongodb://localhost/playground')
+   mongoose.connect('mongodb://localhost/playground')
 
     //better to use debug module rather than console.log
-
-    .then(() => console.log('Connected to MongoDB...'))
+   .then(() => console.log('Connected to MongoDB...'))
    .catch(err => console.error('Could not connect to MongoDB...',err));
 
 ```
+
 ### ENV requirements:
 
 **For Mongo-demo, you will need:**
